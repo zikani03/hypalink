@@ -1,0 +1,5 @@
+[
+    { "url": "https://news.ycombinator.com", "text": "Hacker News" },
+    { "url": "https://lobste.rs", "text": "Lobsters" },
+    { "url": "https://reddit.com/r/programming", "text": "Reddit r/programming" }
+]
