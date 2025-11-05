@@ -2,6 +2,8 @@
 
 A web component to make sharing multiple links more convenient in websites and web apps.
 
+One hypa-link can be used to show a list of various hyper links, currently they render in something like a popover/tooltip - but can be styled to display in a modal dialog etc..
+
 ## Usage
 
 First, add the following to your HTML
