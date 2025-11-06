@@ -5,12 +5,11 @@ class Hypalink extends HTMLElement {
 		this._a = document.createElement('a');
 		this._a.textContent = `${this.textContent}`;
 		this._a.setAttribute("href", "#")
-		this.textContent = "";
 		this.buildLinkList();
 		this._a.addEventListener("click", this.onLinkClicked.bind(this));
 		this.appendChild(this._a);
 	}
-	
+
 	buildLinkList() {
 		this.listEl = document.createElement('ul');
 		this.listEl.style = 'position: absolute; z-index: 99999; background: #efefef; padding: 7px 15px; border-radius: 15px; width: fit-content; list-style-type: none; box-shadow: 1px 1px 2px rgba(0,0,0,0.15);'
@@ -29,7 +28,7 @@ class Hypalink extends HTMLElement {
 			return;
 		}
 		const liNodes = []
-		for(var link of this.links) {
+		for (var link of this.links) {
 			const a = document.createElement("a");
 			a.setAttribute("href", link)
 			a.setAttribute("target", "_blank") // TODO: configurable
@@ -41,14 +40,34 @@ class Hypalink extends HTMLElement {
 		this.listEl.append(...liNodes);
 		this.appendChild(this.listEl)
 	}
-	
+
 	extractLinks() {
+		if (this.hasAttribute("label")) {
+			const range = document.createRange()
+			const _virtualInner = range.createContextualFragment(this.innerHTML);
+			for (var c of _virtualInner.children) {
+				if (c instanceof HTMLAnchorElement) {
+					const url = c.getAttribute('href');
+					if (url) {
+						this.links.push(url)
+					}
+				}
+			}
+
+			this.innerHTML = "";
+			this._a.textContent = this.getAttribute('label') || 'Missing <code>label</code> attribute';
+			
+			this.renderLinks();
+			return;
+		}
+
+		this.textContent = "";
 		const srchrefs = this.getAttribute('srchrefs');
 		if (srchrefs) {
 			srchrefs.split(",")
 				.filter(e => URL.canParse(e))
 				.map(url => this.links.push(url));
-				this.renderLinks();
+			this.renderLinks();
 		}
 
 		const _that = this;
@@ -66,7 +85,7 @@ class Hypalink extends HTMLElement {
 				return "unsupported source type"
 			}).then(data => {
 				if (data instanceof Array) {
-						// .filter(e => !e["url"])
+					// .filter(e => !e["url"])
 					data.filter(e => URL.canParse(e["url"]))
 						.map(entry => _that.links.push(entry["url"]))
 				} else {
@@ -75,21 +94,20 @@ class Hypalink extends HTMLElement {
 						.map(url => _that.links.push(url));
 				}
 			})
-			.finally(_ => this.renderLinks())
+				.finally(_ => this.renderLinks())
 		}
-		
+
 	}
 
 	onLinkClicked(e) {
 		e.preventDefault()
 		const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
 		const rect = pos.getClientRect();
-		this.listEl.style.left = `${rect.x - (this.listEl.clientWidth/3)}px`
-		this.listEl.style.top = `${rect.y - (this.listEl.clientHeight*1.20)}px`
+		this.listEl.style.left = `${rect.x - (this.listEl.clientWidth / 3)}px`
+		this.listEl.style.top = `${rect.y - (this.listEl.clientHeight * 1.20)}px`
 		this.listEl.classList.toggle('hypalink-list-hidden')
 		return false;
 	}
 }
 
 customElements.define("hypa-link", Hypalink)
-// customElements.define("x-aa", Hypalink)
