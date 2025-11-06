@@ -1,3 +1,50 @@
+const _hypalinkCSS = `
+.hypalink-list-visible {
+    display: inline-block;
+}
+
+.hypalink-list-wrapper {
+    position: absolute;
+	z-index: 99999; background: #efefef;
+	padding: 7px 15px; 
+	border-radius: 15px; 
+	width: fit-content; 
+	list-style-type: none; 
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+	max-height: 200px;
+	overflow-y: scroll;
+}
+
+.hypalink-list-hidden {
+    display: none;
+}
+
+.hypalink-popover {
+    position: absolute;
+    z-index: 10000;
+    border-radius: 1.5rem;
+    background-color: white;
+    border: 1px solid #efefef;
+    color: black;
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    width: fit-content;
+}
+
+.hypalink-popover button {
+    border: none;
+    background-color: #efefef;
+    color: black;
+    padding: 7px 15px;
+    border-radius: inherit;
+    cursor: pointer;
+}
+
+.hypalink-popover button:hover {
+    background-color: #e9f1f9;
+}
+`
 
 class Hypalink extends HTMLElement {
 
@@ -8,11 +55,18 @@ class Hypalink extends HTMLElement {
 		this.buildLinkList();
 		this._a.addEventListener("click", this.onLinkClicked.bind(this));
 		this.appendChild(this._a);
+		this.addCss()
+	}
+
+	addCss() {
+		const hypalinkStylesheet = document.createElement('style')
+		hypalinkStylesheet.innerText = _hypalinkCSS;
+		this.parentElement.appendChild(hypalinkStylesheet)
 	}
 
 	buildLinkList() {
 		this.listEl = document.createElement('ul');
-		this.listEl.style = 'position: absolute; z-index: 99999; background: #efefef; padding: 7px 15px; border-radius: 15px; width: fit-content; list-style-type: none; box-shadow: 1px 1px 2px rgba(0,0,0,0.15);'
+		this.listEl.classList.add('hypalink-list-wrapper');
 		this.listEl.classList.add('hypalink-list-hidden');
 		this.links = []; // entries have shape: { url: "", text: "" }
 		this.extractLinks();

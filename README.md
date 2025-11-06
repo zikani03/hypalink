@@ -9,7 +9,6 @@ One hypa-link can be used to show a list of various hyper links, currently they 
 First, add the following to your HTML
 
 ```html
-<link rel="stylesheet" href="/hypalink.css">
 <script src="/hypalink.js" type="text/javascript"></script>
 ```
 

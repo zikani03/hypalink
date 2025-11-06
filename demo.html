@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>hypa-link demo</title>
-    <link rel="stylesheet" href="./hypalink.css">
+    <!-- <link rel="stylesheet" href="./hypalink.css"> -->
 </head>
+
 <body>
     <h3>hypa-link is a Web Component for links and can be used in any framework</h3>
     <p>
-    <hypa-link src="/assets/links.txt">These documents</hypa-link> provide <hypa-link srchrefs="https://news.ycombinator.com,https://lobste.rs,https://reddit.com/r/programming">Programming Links</hypa-link> which can be <hypa-link src="/assets/links.json">loaded from JSON</hypa-link>. 
-    Useful for <hypa-link src="/assets/links.txt">Internal Docs</hypa-link>, <hypa-link src="/assets/tutorials.json">Tutorials</hypa-link> and <hypa-link src="/assets/references.json">references</hypa-link>. 
+        <hypa-link src="/assets/links.txt">These documents</hypa-link> provide 
+        <hypa-link srchrefs="https://news.ycombinator.com,https://lobste.rs,https://reddit.com/r/programming">Programming Links</hypa-link> which can be <hypa-link src="/assets/links.json">loaded from JSON</hypa-link>.
+        Useful for <hypa-link src="/assets/links.txt">Internal Docs</hypa-link>, 
+        <hypa-link src="/assets/tutorials.json">Tutorials</hypa-link> and <hypa-link src="/assets/references.json">references</hypa-link>.
     </p>
     <p>
-    It can even handle <hypa-link src="/missing.txt">missing links</hypa-link>
+        It can even handle <hypa-link src="/assets/many-links.txt">many links</hypa-link>.
+        It can even handle <hypa-link src="/missing.txt">missing links</hypa-link>
     </p>
     <hypa-link label="You can also embed links as child nodes">
         <a href="https://news.ycombinator.com">HackerNews</a>
@@ -23,4 +28,5 @@
 
     <script src="./hypalink.js" type="text/javascript"></script>
 </body>
+
 </html>
