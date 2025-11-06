@@ -14,7 +14,7 @@ class Hypalink extends HTMLElement {
 		this.listEl = document.createElement('ul');
 		this.listEl.style = 'position: absolute; z-index: 99999; background: #efefef; padding: 7px 15px; border-radius: 15px; width: fit-content; list-style-type: none; box-shadow: 1px 1px 2px rgba(0,0,0,0.15);'
 		this.listEl.classList.add('hypalink-list-hidden');
-		this.links = [];
+		this.links = []; // entries have shape: { url: "", text: "" }
 		this.extractLinks();
 	}
 
@@ -28,11 +28,11 @@ class Hypalink extends HTMLElement {
 			return;
 		}
 		const liNodes = []
-		for (var link of this.links) {
+		for (var e of this.links) {
 			const a = document.createElement("a");
-			a.setAttribute("href", link)
+			a.setAttribute("href", e["url"])
 			a.setAttribute("target", "_blank") // TODO: configurable
-			a.textContent = link;
+			a.textContent = e["text"];
 			const li = document.createElement("li");
 			li.appendChild(a)
 			liNodes.push(li)
@@ -49,7 +49,7 @@ class Hypalink extends HTMLElement {
 				if (c instanceof HTMLAnchorElement) {
 					const url = c.getAttribute('href');
 					if (url) {
-						this.links.push(url)
+						this.links.push({ url, text: c.textContent })
 					}
 				}
 			}
@@ -66,7 +66,7 @@ class Hypalink extends HTMLElement {
 		if (srchrefs) {
 			srchrefs.split(",")
 				.filter(e => URL.canParse(e))
-				.map(url => this.links.push(url));
+				.map(url => this.links.push({ url, text: url }));
 			this.renderLinks();
 		}
 
@@ -87,11 +87,11 @@ class Hypalink extends HTMLElement {
 				if (data instanceof Array) {
 					// .filter(e => !e["url"])
 					data.filter(e => URL.canParse(e["url"]))
-						.map(entry => _that.links.push(entry["url"]))
+						.map(entry => _that.links.push(entry))
 				} else {
 					const lines = `${data}`.split('\n');
 					lines.filter(e => URL.canParse(e))
-						.map(url => _that.links.push(url));
+						.map(url => _that.links.push({ url, text: url }));
 				}
 			})
 				.finally(_ => this.renderLinks())
