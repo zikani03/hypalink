@@ -45,4 +45,20 @@ Then you can use the `<hypa-link>` tag as follows
 
 ## Demo 
 
+### Basic Popover
+
 ![[]](demo.png)
+
+### Modal 
+
+Add the `modal` attribute to make Links popup in a modal
+
+```html
+<hypa-link label="You can embed links as child nodes" modal>
+    <a href="https://news.ycombinator.com">HackerNews</a>
+    <a href="https://lobste.rs">Lobsters</a>
+    <a href="https://reddit.com/r/programming">Reddit r/Programming</a>
+</hypa-link>
+```
+
+![[]](modal.png)
