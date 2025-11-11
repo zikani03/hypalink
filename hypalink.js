@@ -44,7 +44,45 @@ const _hypalinkCSS = `
 .hypalink-popover button:hover {
     background-color: #e9f1f9;
 }
+
+.hypalink-modal {
+  border-radius: 1.5rem;
+  background-color: white;
+  border: 1px solid #efefef;
+  color: black;
+  height: 200px;
+  max-height: 400px;
+  max-width: 400px;
+  padding: 2px;
+  width: 500px;
+}
+
+.hypalink-modal > div {
+	padding: 7px;
+}
+	
+
+#__hypalink__modal__portal_over_9000z::backdrop {
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(3px);
+}
+
+.hypalink-modal .hypalink-list-wrapper {
+	z-index: 0; 
+	background: none;
+	padding: 7px 15px; 
+	border-radius: none; 
+	list-style-type: none; 
+	box-shadow: none;
+	min-height: inherit;
+	width: 90%; 
+	max-height: 80%;
+	overflow-y: scroll;
+}
+
 `
+
+const HYPALINK_MODAL_ID = '__hypalink__modal__portal_over_9000z';
 
 class Hypalink extends HTMLElement {
 
@@ -52,6 +90,10 @@ class Hypalink extends HTMLElement {
 		this._a = document.createElement('a');
 		this._a.textContent = `${this.textContent}`;
 		this._a.setAttribute("href", "#")
+		this.modalEnabled = this.hasAttribute('modal');
+		if (this.modalEnabled) {
+			this.addModalElement();
+		}
 		this.buildLinkList();
 		this._a.addEventListener("click", this.onLinkClicked.bind(this));
 		this.appendChild(this._a);
@@ -70,6 +112,7 @@ class Hypalink extends HTMLElement {
 		this.listEl.classList.add('hypalink-list-hidden');
 		this.links = []; // entries have shape: { url: "", text: "" }
 		this.extractLinks();
+		this._ul = this.listEl;
 	}
 
 	renderLinks() {
@@ -93,6 +136,21 @@ class Hypalink extends HTMLElement {
 		}
 		this.listEl.append(...liNodes);
 		this.appendChild(this.listEl)
+	}
+	
+	addModalElement() {
+		this._modalEl = document.getElementById(HYPALINK_MODAL_ID);
+		if (!this._modalEl) {
+			this._modalEl = document.createElement('dialog');
+			this._modalEl.setAttribute('id', HYPALINK_MODAL_ID);
+			this._modalContent = document.createElement('div');
+			this._modalEl.appendChild(this._modalContent);
+		} else{ 
+			this._modalContent = this._modalEl.firstChild;
+		}
+		this._modalEl.classList.add('hypalink-modal');
+		const body = document.querySelector('body');
+		body.appendChild(this._modalEl);
 	}
 
 	extractLinks() {
@@ -152,9 +210,28 @@ class Hypalink extends HTMLElement {
 		}
 
 	}
+	
+	onShowModal() {
+		const clonedList = this._ul.cloneNode(true);
+		clonedList.classList.remove('hypalink-list-hidden');
+		this._modalContent.replaceChildren(clonedList);
+		const instruction = document.createElement('span');
+		instruction.style.cursor = 'pointer';
+		instruction.style.color = '#858585ff'
+		instruction.addEventListener('click', (e) => {
+			document.getElementById(HYPALINK_MODAL_ID).close();
+		})
+		instruction.innerText = "Click here or Press ESC (escape) to close the dialog"
+		this._modalContent.appendChild(instruction)
+		document.getElementById(HYPALINK_MODAL_ID).showModal();
+	}
 
 	onLinkClicked(e) {
 		e.preventDefault()
+		if (this.modalEnabled) {
+			this.onShowModal()
+			return false;
+		}
 		const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
 		const rect = pos.getClientRect();
 		this.listEl.style.left = `${rect.x - (this.listEl.clientWidth / 3)}px`
