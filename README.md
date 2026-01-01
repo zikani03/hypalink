@@ -15,7 +15,7 @@ First, add the following to your HTML
 Then you can use the `<hypa-link>` tag as follows
 
 
-1. Embed links as child nodes 
+### Embed links as child nodes 
 
 ```html
 <hypa-link label="You can embed links as child nodes">
@@ -25,19 +25,19 @@ Then you can use the `<hypa-link>` tag as follows
 </hypa-link>
 ```
 
-2. With `srchrefs` - CSV of links
+### With `srchrefs` - CSV of links
 
 ```html
 <hypa-link srchrefs="https://news.ycombinator.com,https://lobste.rs,https://reddit.com/r/programming">Programming Links</hypa-link>
 ```
 
-3. With a JSON `src` - JSON array from a remote source with a `"url"` and `"text"` fields
+### With a JSON `src` - JSON array from a remote source with a `"url"` and `"text"` fields
 
 ```html
 <hypa-link src="/assets/links.json">loaded from JSON</hypa-link>
 ```
 
-4. With a plain-text `src` - a plain text file from a remote source where each link is on it's own line
+### With a plain-text `src` - a plain text file from a remote source where each link is on it's own line
 
 ```html
 <hypa-link src="/assets/links.txt">These documents</hypa-link>
